@@ -48,7 +48,7 @@ equipmentManage.post('/borrow', (req, res) => {
   db.promise().query(`SELECT eId FROM equipments WHERE eType='${req.body.eType}' AND eStatus=1`)
     .then(([rows, fields]) => {
       if (rows.length) {
-        db.query(`UPDATE equipments SET eStatus=0, occupiedId=${req.body.userId} WHERE eId=${rows[0].eId}`)
+        db.query(`INSERT INTO borrow(userId, eId, borrowTime) VALUE(${req.body.userId}, ${rows[0].eId}, '${req.body.borrowTime}')`)
         res.send({
           status: 0,
           eId: rows[0].eId
@@ -84,7 +84,7 @@ equipmentManage.get('/borrowedList', (req, res) => {
 
 //归还设备
 equipmentManage.post('/return', (req, res) => {
-  db.promise().query(`UPDATE equipments SET eStatus=1, occupiedId=NULL WHERE eId=${req.body.eId}`)
+  db.promise().query(`UPDATE borrow SET returnTime='${req.body.returnTime}' WHERE userId=${req.body.userId} AND returnTime IS NULL`)
     .then((result) => {
       res.send({
         status: 0,

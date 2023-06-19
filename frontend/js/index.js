@@ -158,6 +158,15 @@ settle.addEventListener('click', () => {
     userId: urlParams.id,
     endTime: curTime
   })
+    .then((result) => {
+      if (!result.data.status) {
+        alert(`您本次上机时间为${result.data.h}小时${result.data.m}分钟${result.data.s}秒，共计消费${result.data.cost}元。`)
+      } else {
+        alert(result.data.message)
+      }
+    }).catch((err) => {
+      console.log(err);
+    });
 })
 
 /*
@@ -177,12 +186,13 @@ const returnEquipList = returnBox.querySelector('select')
 const getSubmit = getBox.querySelector('.getSubmit')
 const returnSubmit = returnBox.querySelector('.returnSubmit')
 
-//我要借用
+//点击我要借用按钮
 getButton.addEventListener('click', () => {
   getButton.style.backgroundColor = '#2f2b9a'
   returnButton.style.backgroundColor = '#002a44'
   getBox.style.display = 'block'
   returnBox.style.display = 'none'
+  //刷新下拉菜单
   while (getEquipList.children.length) {
     getEquipList.removeChild(getEquipList.children[getEquipList.children.length - 1])
   }
@@ -202,9 +212,11 @@ getButton.addEventListener('click', () => {
 //提交借用
 getSubmit.addEventListener('click', () => {
   const borrowType = getEquipList.value
+  const curTime = new Date()
   const borrowObj = {
     userId: urlParams.id,
-    eType: borrowType
+    eType: borrowType,
+    borrowTime: curTime
   }
   if (!borrowType.length) {
     alert('请选择要借用的设备！')
@@ -245,7 +257,7 @@ function refreshReturnOptions() {
   });
 }
 
-//我要归还
+//点击我要归还按钮
 returnButton.addEventListener('click', () => {
   getButton.style.backgroundColor = '#002a44'
   returnButton.style.backgroundColor = '#2f2b9a'
@@ -257,9 +269,11 @@ returnButton.addEventListener('click', () => {
 //提交归还
 returnSubmit.addEventListener('click', () => {
   const returnEquipId = returnEquipList.value
+  const curTime = new Date()
   const returnObj = {
     userId: urlParams.id,
-    eId: returnEquipId
+    eId: returnEquipId,
+    returnTime: curTime
   }
   if (!returnEquipId.length) {
     alert('请选择要归还的设备！')

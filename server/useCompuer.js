@@ -59,9 +59,37 @@ useComputer.post('/end', (req, res) => {
   let duration
   db.promise().query(`SELECT startTime FROM opPC WHERE userId=${info.userId} AND endTime IS NULL`)
     .then(([rows, fields]) => {
-      console.log(new Date(info.endTime).getTime() - new Date(rows[0].startTime).getTime());
+      duration = new Date(info.endTime).getTime() - new Date(rows[0].startTime).getTime()
+      duration = Math.floor(duration / 1000)
+      let dHour = Math.floor(duration / 3600)
+      let dMin = Math.floor(duration / 60) % 60
+      let dSec = duration % 60
+      let calCost = dHour + 1
+      //更新上机表
+      db.promise().query(`UPDATE opPC SET endTime='${info.endTime}', cost=${calCost} WHERE userId=${info.userId} AND endTime IS NULL`)
+        .then((result) => {
+          res.send({
+            status: 0,
+            h: dHour,
+            m: dMin,
+            s: dSec,
+            cost: calCost
+          })
+        }).catch((err) => {
+          console.log(err);
+          res.send({
+            statsus: 1,
+            message: '操作失败！',
+            errInfo: err
+          })
+        });
     }).catch((err) => {
       console.log(err);
+      res.send({
+        statsus: 1,
+        message: '操作失败！',
+        errInfo: err
+      })
     });
 })
 

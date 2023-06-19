@@ -22,6 +22,13 @@ CREATE TABLE opPC(
     cost INT
 );
 
+CREATE TABLE borrow(
+	userId BIGINT REFERENCES users(userId),
+    eId INT REFERENCES equipments(eId),
+    borrowTime VARCHAR(30) NOT NULL,
+    returnTime VARCHAR(30)
+);
+
 -- 关闭安全更新模式，否则无法根据occupiedId更改设备状态
 SET sql_safe_updates=0;
 
@@ -43,5 +50,20 @@ FOR EACH ROW
 -- 当有人上机结束时，将对应机器标志为空闲
 CREATE TRIGGER releaseCompuer
 AFTER UPDATE ON opPC
+FOR EACH ROW
+	UPDATE equipments SET eStatus=1, occupiedId=NULL WHERE eId=OLD.eId;
+
+
+-- 定义触发器
+-- 当领用设备时，将equipments表的设备状态置0
+CREATE TRIGGER borrowEquip
+AFTER INSERT ON borrow
+FOR EACH ROW
+	UPDATE equipments SET eStatus=0, occupiedId=NEW.userId WHERE eId=NEW.eId;
+    
+-- 定义触发器
+-- 当归还设备时，将equipments表的设备状态置1
+CREATE TRIGGER returnEquip
+AFTER UPDATE ON borrow
 FOR EACH ROW
 	UPDATE equipments SET eStatus=1, occupiedId=NULL WHERE eId=OLD.eId;
