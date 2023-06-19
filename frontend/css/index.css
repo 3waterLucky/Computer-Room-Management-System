@@ -466,3 +466,32 @@ header .mask {
 .userManage .searchResultName {
   margin-left: 32px;
 }
+
+/* 信息统计页 */
+.statistics ul {
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  font-size: 16px;
+  color: #fff;
+}
+
+.statistics ul li {
+  float: left;
+  width: 25%;
+  height: 100%;
+  text-align: center;
+  border: 1px solid #fff;
+  background-color: #c88f4d;
+  cursor: pointer;
+}
+
+.statistics table {
+  margin: 20px auto 0 auto;
+}
+
+.statistics table td,
+.statistics table th {
+  text-align: center;
+  border: 1px solid #000;
+}

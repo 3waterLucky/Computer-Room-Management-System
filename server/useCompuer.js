@@ -98,4 +98,31 @@ useComputer.post('/end', (req, res) => {
     });
 })
 
+// 查询是否有未结束的上机
+// 请求参数：userId
+// 返回参数：未结束的上机的开始时间startTime
+useComputer.get('/notEnd', (req, res) => {
+  db.promise().query(`SELECT startTime FROM opPC WHERE userId=${req.query.userId} AND endTime IS NULL`)
+  .then(([rows, fields]) => {
+    if (rows.length) {
+      console.log(rows);
+      res.send({
+        status: 0,
+        startTime: rows[0].startTime
+      })
+    } else {
+      res.send({
+        status: 0,
+        startTime: NULL
+      })
+    }
+  }).catch((err) => {
+    console.log(err);
+    res.send({
+      status: 1,
+      message: err
+    })
+  });
+})
+
 module.exports = useComputer

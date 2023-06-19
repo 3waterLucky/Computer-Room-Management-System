@@ -1,5 +1,7 @@
 import { formdataToJson } from "./formdataToJson.js"
 import { refreshOptions } from "./refreshOptions.js"
+import { rowsToTable } from "./rowsToTable.js"
+import { dateToStr } from "./dateToStr.js"
 
 const nav = document.querySelector('.nav')  //左侧导航栏
 const header = document.querySelector('header')
@@ -56,7 +58,6 @@ for (let i = 0; i < tags.length; i++) {
     }
     tags[i].style.backgroundColor = '#f7a64b'
     tags[i].style.color = "#fff"
-    console.log(tags[i].className);
     if (tags[i].innerHTML === '用户管理') {
       userNav.style.display = 'block'
     }
@@ -140,6 +141,44 @@ const costTitle = currentCost.querySelector('.title')
 const cost = currentCost.querySelector('.cost')
 const settle = using.querySelector('.settle')
 
+// 正计时函数
+let counter
+const countTime = (startTime) => {
+  let start = startTime.getTime()
+  counter = setInterval(() => {
+    let now = Date.now()
+    let duration = Math.floor((now - start) / 1000)
+    let h = Math.floor(duration / 3600)
+    let m = Math.floor(duration / 60) % 60
+    let s = duration % 60
+    hour.innerHTML = h
+    min.innerHTML = m
+    sec.innerHTML = s
+    cost.innerHTML = h + 1
+  }, 1000)
+}
+
+const opBtn = nav.getElementsByTagName('li')[1]
+opBtn.addEventListener('click', () => {
+  axios.get('http://127.0.0.1:8000/op/notend', {
+    params: {
+      userId: urlParams.id
+    }
+  })
+  .then((result) => {
+    if (!result.data.status) {
+      if (result.data.startTime) {
+        using.style.display = 'block'
+        start.style.display = 'none'
+        startTime.innerHTML = dateToStr(new Date(result.data.startTime))
+        countTime(new Date(result.data.startTime))
+      }
+    }
+  }).catch((err) => {
+    alert('系统错误！')
+  });
+})
+
 //开始上机
 start.addEventListener('click', () => {
   const curTime = new Date()
@@ -161,43 +200,6 @@ start.addEventListener('click', () => {
   startTime.innerHTML = dateToStr(curTime)
   countTime(curTime)
 })
-
-/**
- * 日期字符串转换函数
- * @param {Date} dateObj
- * @return {string}
- */
-const dateToStr = (dateObj) => {
-  let y = dateObj.getFullYear()
-  let m = dateObj.getMonth() + 1
-  m = m < 10 ? '0' + m : m
-  let d = dateObj.getDate()
-  d = d < 10 ? '0' + d : d
-  let h = dateObj.getHours()
-  h = h < 10 ? '0' + h : h
-  let min = dateObj.getMinutes()
-  min = min < 10 ? '0' + min : min
-  let s = dateObj.getSeconds()
-  s = s < 10 ? '0' + s : s
-  return `${y}-${m}-${d}&nbsp;&nbsp;&nbsp;&nbsp;${h}:${min}:${s}`
-}
-
-// 正计时函数
-let counter
-const countTime = (startTime) => {
-  let start = startTime.getTime()
-  counter = setInterval(() => {
-    let now = Date.now()
-    let duration = Math.floor((now - start) / 1000)
-    let h = Math.floor(duration / 3600)
-    let m = Math.floor(duration / 60) % 60
-    let s = duration % 60
-    hour.innerHTML = h
-    min.innerHTML = m
-    sec.innerHTML = s
-    cost.innerHTML = h + 1
-  }, 1000)
-}
 
 //结束上机并结算
 settle.addEventListener('click', () => {
@@ -321,11 +323,7 @@ const addUserBox = document.querySelector('.addUserBox')
 const setAdminBox = document.querySelector('.setAdminBox')
 const deleteUserBox = document.querySelector('.deleteUserBox')
 const saveButton = addUserBox.querySelector('.save')
-const setAdminSearchUser = setAdminBox.querySelector('.searchUser')
-const setAdminsearchResult = setAdminBox.querySelector('.searchResult')
 const setAdminSubmit = setAdminBox.querySelector('.setAdminSubmit')
-const deleteSearchUser = deleteUserBox.querySelector('.searchUser')
-const deleteSearchResult = deleteUserBox.querySelector('.searchResult')
 const deleteSubmit = deleteUserBox.querySelector('.deleteSubmit')
 
 //添加用户
@@ -506,4 +504,117 @@ scrapSubmit.addEventListener('click', () => {
         console.log(err);
       });
   }
+})
+
+/*
+******************
+*                *
+*   信息统计页    *
+*                *
+******************
+*/
+const statistics = document.querySelector('.statistics')
+const staNav = statistics.querySelector('.staNav')
+const equipStaBtn = staNav.children[0]
+const scrapStaBtn = staNav.children[1]
+const borrowStaBtn = staNav.children[2]
+const chargeStaBtn = staNav.children[3]
+const equipSta = statistics.querySelector('.equipSta')
+const scrapSta = statistics.querySelector('.scrapSta')
+const borrowSta = statistics.querySelector('.borrowSta')
+const chargeSta = statistics.querySelector('.chargeSta')
+
+// 标题栏
+for (const item of staNav.children) {
+  item.addEventListener('click', () => {
+    for (const item of staNav.children) {
+      item.style.backgroundColor = '#c88f4d'
+    }
+    item.style.backgroundColor = '#f7a64b'
+  })
+}
+
+//获取并展示设备列表
+equipStaBtn.addEventListener('click', () => {
+  while (equipSta.children.length) {
+    equipSta.removeChild(equipSta.children[equipSta.children.length - 1])
+  }
+  for (let i = 1; i < 5; i++) {
+    statistics.children[i].innerHTML = ''
+  }
+  axios.get('http://127.0.0.1:8000/data/equip')
+    .then((result) => {
+      if (!result.data.status) {
+        const table = rowsToTable(result.data.sta)
+        equipSta.appendChild(table)
+      } else {
+        alert('获取数据失败！')
+      }
+    }).catch((err) => {
+      alert('获取数据失败！')
+    });
+})
+
+
+//获取并展示已报废设备列表
+scrapStaBtn.addEventListener('click', () => {
+  while (scrapSta.children.length) {
+    scrapSta.removeChild(scrapSta.children[scrapSta.children.length - 1])
+  }
+  for (let i = 1; i < 5; i++) {
+    statistics.children[i].innerHTML = ''
+  }
+  axios.get('http://127.0.0.1:8000/data/scrap')
+    .then((result) => {
+      if (!result.data.status) {
+        const table = rowsToTable(result.data.sta)
+        scrapSta.appendChild(table)
+      } else {
+        alert('获取数据失败！')
+      }
+    }).catch((err) => {
+      alert('获取数据失败！')
+    });
+})
+
+//获取并展示领用表
+borrowStaBtn.addEventListener('click', () => {
+  while (borrowSta.children.length) {
+    borrowSta.removeChild(borrowSta.children[borrowSta.children.length - 1])
+  }
+  for (let i = 1; i < 5; i++) {
+    statistics.children[i].innerHTML = ''
+  }
+  axios.get('http://127.0.0.1:8000/data/borrow')
+  .then((result) => {
+    if (!result.data.status) {
+      const table = rowsToTable(result.data.sta)
+      borrowSta.appendChild(table)
+    } else {
+      alert('获取数据失败！')
+    }
+  }).catch((err) => {
+    alert('获取数据失败！')
+  });
+})
+
+//获取并展示收费表
+chargeStaBtn.addEventListener('click', () => {
+  while (chargeSta.children.length) {
+    chargeSta.removeChild(chargeSta.children[chargeSta.children.length - 1])
+  }
+  for (let i = 1; i < 5; i++) {
+    statistics.children[i].innerHTML = ''
+  }
+  axios.get('http://127.0.0.1:8000/data/charge')
+  .then((result) => {
+    if (!result.data.status) {
+      const table = rowsToTable(result.data.sta)
+      chargeSta.appendChild(table)
+    } else {
+      alert('获取数据失败！')
+    }
+  }).catch((err) => {
+    alert('获取数据失败！')
+  });
 })

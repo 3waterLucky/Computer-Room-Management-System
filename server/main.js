@@ -26,7 +26,7 @@ app.use(register)
 app.use('/userInfo', userInfo)
 app.use('/equipmentManage', equipmentManage)
 app.use('/op', useComputer)
-app.use('/statistics', statistics)
+app.use('/data', statistics)
 
 app.listen(8000, () => {
   console.log('Express server running at http://127.0.0.1:8000');
