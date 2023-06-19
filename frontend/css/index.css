@@ -1,7 +1,3 @@
-/* html {
-  height: 100%;
-} */
-
 body {
   background-color: #efefef;
 }
@@ -10,8 +6,8 @@ body {
 header {
   width: 100%;
   height: 100px;
-  background: url(../images/bluebgi.jpg) no-repeat;
-  background-position: 60% 80%;
+  background: url(../images/autumn.jpeg) no-repeat;
+  background-position: 0 80%;
   background-size: cover;
   line-height: 100px;
 }
@@ -20,7 +16,7 @@ header .mask {
   position: relative;
   height: 100%;
   width: 100%;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.2);
 }
 
 /* 标题 */
@@ -33,8 +29,8 @@ header .mask {
   font-size: 40px;
   color: transparent;
   -webkit-text-stroke: 1px #fff;
-  background: url(../images/bluebgi.jpg) no-repeat;
-  background-position: 60% 80%;
+  background: url(../images/autumn.jpeg) no-repeat;
+  background-position: 0 80%;
   background-size: cover;
   background-clip: text;
   -webkit-background-clip: text;
@@ -71,8 +67,8 @@ header .mask {
   float: left;
   width: 270px;
   height: 100%;
-  color: #888;
-  background-color: #002a44;
+  color: #ddd;
+  background-color: #c88f4d;
 }
 
 .w .nav ul li {
@@ -89,7 +85,7 @@ header .mask {
 
 .w .nav ul li:first-child {
   border-top: none;
-  background-color: #2f2b9a;
+  background-color: #f7a64b;
   color: #fff;
 }
 
@@ -140,6 +136,10 @@ header .mask {
   height: 200px;
 }
 
+.userInfo #updateUserInfo ul {
+  margin-top: 55px;
+}
+
 .userInfo #updateUserInfo ul li {
   width: 100%;
   height: 30px;
@@ -155,6 +155,7 @@ header .mask {
   float: right;
   width: 200px;
   height: 30px;
+  padding-left: 5px;
   line-height: 30px;
 }
 
@@ -174,6 +175,65 @@ header .mask {
   color: #fff;
   background-color: #2f2b9a;
   border-radius: 30px;
+}
+
+/* 上机登记页 */
+.oppc .using {
+  display: none;
+  position: absolute;
+  width: 600px;
+  height: 100px;
+  top: 100px;
+  margin-left: 165px;
+  text-align: center;
+}
+
+.oppc .start {
+  width: 150px;
+  height: 50px;
+  margin-top: 64px;
+  font-size: 20px;
+  line-height: 50px;
+  text-align: center;
+  color: #fff;
+  background-color: #f7a64b;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  cursor: pointer;
+}
+
+.oppc .using .duration,
+.oppc .using .currentCost {
+  margin-top: 15px;
+}
+
+.oppc .using .settle {
+  width: 80px;
+  height: 40px;
+  margin: 30px auto 0 auto;
+  line-height: 40px;
+  text-align: center;
+  color: #fff;
+  background-color: #2f2b9a;
+  border-radius: 30px;
+}
+
+.oppc .using .title {
+  font-weight: 600;
+}
+
+.oppc .using .hour,
+.oppc .using .min,
+.oppc .using .sec {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2f2b9a;
+}
+
+.oppc .using .cost {
+  font-size: 18px;
+  font-weight: 600;
+  color: #ff0000;
 }
 
 /* 设备领用页 */
@@ -318,8 +378,91 @@ header .mask {
 }
 
 /* 用户管理页 */
-.addUserBox,
-.setAdminBox,
-.deleteUserBox {
+.userManage .addUserBox,
+.userManage .setAdminBox,
+.userManage .deleteUserBox {
   display: none;
+  position: relative;
+  width: 300px;
+  height: 300px;
+  margin: 0 auto;
+  margin-top: 50px;
+}
+
+.userManage .userNav {
+  display: none;
+  position: absolute;
+  width: 150px;
+  height: 180px;
+  top: 120px;
+}
+
+.userManage .userNav li {
+  width: 100%;
+  height: 60px;
+  font-size: 20px;
+  line-height: 60px;
+  text-align: center;
+  color: #fff;
+  background-color: #f7a64b;
+  border: 1px solid #fff;
+  cursor: pointer;
+}
+
+.userManage .addUserBox .save,
+.userManage .setAdminBox .setAdminSubmit,
+.userManage .deleteUserBox .deleteSubmit {
+  width: 120px;
+  height: 40px;
+  margin: 30px auto 0 auto;
+  line-height: 40px;
+  text-align: center;
+  color: #fff;
+  background-color: #2f2b9a;
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+.userManage .addUserBox li,
+.userManage .setAdminBox .searchUser,
+.userManage .setAdminBox .searchResult,
+.userManage .deleteUserBox .searchUser,
+.userManage .deleteUserBox .searchResult {
+  margin-top: 20px;
+}
+
+.userManage input,
+.userManage select {
+  position: absolute;
+  right: 65px;
+  width: 150px;
+  height: 30px;
+  padding-left: 5px;
+  line-height: 30px;
+}
+
+.userManage .addUserBox input[type="checkbox"] {
+  left: 0;
+  width: 20px;
+}
+
+.userManage .addUserBox label {
+  position: absolute;
+  left: 25px;
+  line-height: 30px;
+}
+
+.userManage .addUserBox form {
+  width: 100%;
+  height: 80px;
+}
+
+.userManage .addUserBox .save {
+  position: absolute;
+  left: 90px;
+  bottom: 10px;
+}
+
+.userManage .searchResultName {
+  margin-left: 32px;
 }

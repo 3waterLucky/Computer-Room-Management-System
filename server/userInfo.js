@@ -1,3 +1,4 @@
+//用户管理相关接口
 const express = require('express')
 const mysql = require('mysql2')
 const userInfo = express.Router()
@@ -15,7 +16,9 @@ userInfo.use(bodyParser.json())
 userInfo.use(express.urlencoded({ extended: false }))
 userInfo.use(cors())
 
-//获取用户姓名
+// 获取用户姓名
+// 请求参数：userId
+// 返回参数：username
 userInfo.get('/username', (req, res) => {
   let ret = {
     status: 0,
@@ -35,7 +38,9 @@ userInfo.get('/username', (req, res) => {
     })
 })
 
-//获取用户所在部门
+// 获取用户所在部门
+// 请求参数：userId
+// 返回参数：dep
 userInfo.get('/dep', (req, res) => {
   let ret = {
     status: 0,
@@ -55,7 +60,9 @@ userInfo.get('/dep', (req, res) => {
     })
 })
 
-//获取用户权限
+// 获取用户权限
+// 请求参数：userId
+// 返回参数：auth
 userInfo.get('/auth', (req, res) => {
   let ret = {
     status: 0,
@@ -78,7 +85,8 @@ userInfo.get('/auth', (req, res) => {
     })
 })
 
-//更新信息
+// 更新信息
+// 请求参数：userId, username, dep, [password]
 userInfo.post('/update', (req, res) => {
   const form = req.body
   if (form.password) {
@@ -112,7 +120,9 @@ userInfo.post('/update', (req, res) => {
   }
 })
 
-//添加用户
+// 添加用户
+// 请求参数：userId, username, dep, password, [auth]
+// 返回参数：userId, username
 userInfo.post('/add', (req, res) => {
   const info = req.body
   if (!info.password.length) {
@@ -139,7 +149,8 @@ userInfo.post('/add', (req, res) => {
     });
 })
 
-//设置管理员权限
+// 设置管理员权限
+// 请求参数：userId
 userInfo.post('/setAdmin', (req, res) => {
   db.promise().query(`UPDATE users SET auth=1 WHERE userId=${req.body.userId}`)
     .then((result) => {
@@ -155,7 +166,9 @@ userInfo.post('/setAdmin', (req, res) => {
     });
 })
 
-//删除用户
+// 删除用户
+// 请求参数：userId
+// 返回参数：userId
 userInfo.post('/deleteUser', (req, res) => {
   db.promise().query(`DELETE FROM users WHERE userId=${req.body.userId}`)
     .then((result) => {

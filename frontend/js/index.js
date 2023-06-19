@@ -1,4 +1,5 @@
 import { formdataToJson } from "./formdataToJson.js"
+import { refreshOptions } from "./refreshOptions.js"
 
 const nav = document.querySelector('.nav')  //左侧导航栏
 const header = document.querySelector('header')
@@ -41,18 +42,24 @@ axios.get('http://127.0.0.1:8000/userInfo/auth', {
   alert(err.message);
 });
 
+const userNav = document.querySelector('.userNav')
 //左侧导航栏tag的切换
 const tags = nav.children[0].getElementsByTagName('li')
 const contentBox = content.children
 for (let i = 0; i < tags.length; i++) {
   tags[i].addEventListener('click', () => {
     for (let j = 0; j < tags.length; j++) {
-      tags[j].style.backgroundColor = '#002a44'
-      tags[j].style.color = "#888"
+      tags[j].style.backgroundColor = '#c88f4d'
+      tags[j].style.color = "#ddd"
       contentBox[j].style.display = 'none'
+      userNav.style.display = 'none'
     }
-    tags[i].style.backgroundColor = '#2f2b9a'
+    tags[i].style.backgroundColor = '#f7a64b'
     tags[i].style.color = "#fff"
+    console.log(tags[i].className);
+    if (tags[i].innerHTML === '用户管理') {
+      userNav.style.display = 'block'
+    }
     contentBox[i].style.display = 'block'
   })
 }
@@ -119,7 +126,7 @@ const start = oppc.querySelector('.start')
 const using = oppc.querySelector('.using')
 const startTimeBox = using.querySelector('.startTime')
 const startTimeTitle = startTimeBox.querySelector('.title')
-const time = startTimeBox.querySelector('.time')
+const startTime = startTimeBox.querySelector('.time')
 const duration = using.querySelector('.duration')
 const durationTitle = duration.querySelector('.title')
 const hour = duration.querySelector('.hour')
@@ -136,6 +143,8 @@ const settle = using.querySelector('.settle')
 //开始上机
 start.addEventListener('click', () => {
   const curTime = new Date()
+  using.style.display = 'block'
+  start.style.display = 'none'
   axios.post('http://127.0.0.1:8000/op/start', {
     userId: urlParams.id,
     startTime: curTime
@@ -149,11 +158,53 @@ start.addEventListener('click', () => {
     }).catch((err) => {
       console.log(err);
     });
+  startTime.innerHTML = dateToStr(curTime)
+  countTime(curTime)
 })
+
+/**
+ * 日期字符串转换函数
+ * @param {Date} dateObj
+ * @return {string}
+ */
+const dateToStr = (dateObj) => {
+  let y = dateObj.getFullYear()
+  let m = dateObj.getMonth() + 1
+  m = m < 10 ? '0' + m : m
+  let d = dateObj.getDate()
+  d = d < 10 ? '0' + d : d
+  let h = dateObj.getHours()
+  h = h < 10 ? '0' + h : h
+  let min = dateObj.getMinutes()
+  min = min < 10 ? '0' + min : min
+  let s = dateObj.getSeconds()
+  s = s < 10 ? '0' + s : s
+  return `${y}-${m}-${d}&nbsp;&nbsp;&nbsp;&nbsp;${h}:${min}:${s}`
+}
+
+// 正计时函数
+let counter
+const countTime = (startTime) => {
+  let start = startTime.getTime()
+  counter = setInterval(() => {
+    let now = Date.now()
+    let duration = Math.floor((now - start) / 1000)
+    let h = Math.floor(duration / 3600)
+    let m = Math.floor(duration / 60) % 60
+    let s = duration % 60
+    hour.innerHTML = h
+    min.innerHTML = m
+    sec.innerHTML = s
+    cost.innerHTML = h + 1
+  }, 1000)
+}
 
 //结束上机并结算
 settle.addEventListener('click', () => {
   const curTime = new Date()
+  clearInterval(counter)
+  using.style.display = 'none'
+  start.style.display = 'block'
   axios.post('http://127.0.0.1:8000/op/end', {
     userId: urlParams.id,
     endTime: curTime
@@ -193,20 +244,7 @@ getButton.addEventListener('click', () => {
   getBox.style.display = 'block'
   returnBox.style.display = 'none'
   //刷新下拉菜单
-  while (getEquipList.children.length) {
-    getEquipList.removeChild(getEquipList.children[getEquipList.children.length - 1])
-  }
-  axios.get('http://127.0.0.1:8000/equipmentManage/equipList/distinct')
-    .then((result) => {
-      for (const item of result.data) {
-        const option = document.createElement('option')
-        option.value = item.eType
-        option.innerHTML = item.eType
-        getEquipList.appendChild(option)
-      }
-    }).catch((err) => {
-      console.log(err);
-    });
+  refreshOptions(getEquipList, null, 'http://127.0.0.1:8000/equipmentManage/equipList/distinct' )
 })
 
 //提交借用
@@ -234,36 +272,15 @@ getSubmit.addEventListener('click', () => {
   }
 })
 
-//刷新归还设备的选项
-function refreshReturnOptions() {
-  //先清空所有选项
-  while (returnEquipList.children.length) {
-    returnEquipList.removeChild(returnEquipList.children[returnEquipList.children.length - 1])
-  }
-  axios.get('http://127.0.0.1:8000/equipmentManage/borrowedList', {
-    params: {
-      id: urlParams.id
-    }
-  })
-  .then((result) => {
-    for (const item of result.data) {
-      const option = document.createElement('option')
-      option.value = item.eId
-      option.innerHTML = item.eId + ' ' + item.eType
-      returnEquipList.appendChild(option)
-    }
-  }).catch((err) => {
-    console.log(err);
-  });
-}
-
 //点击我要归还按钮
 returnButton.addEventListener('click', () => {
   getButton.style.backgroundColor = '#002a44'
   returnButton.style.backgroundColor = '#2f2b9a'
   returnBox.style.display = 'block'
   getBox.style.display = 'none'
-  refreshReturnOptions()
+  refreshOptions(returnEquipList, {
+    id: urlParams.id
+  }, 'http://127.0.0.1:8000/equipmentManage/borrowedList', 'get', true)
 })
 
 //提交归还
@@ -281,7 +298,9 @@ returnSubmit.addEventListener('click', () => {
     axios.post('http://127.0.0.1:8000/equipmentManage/return', returnObj)
     .then((result) => {
       alert(`您已归还编号为【${result.data.eId}】的设备！`)
-      refreshReturnOptions()
+      refreshOptions(returnEquipList, {
+        id: urlParams.id
+      }, 'http://127.0.0.1:8000/equipmentManage/borrowedList', 'get', true)
     }).catch((err) => {
       console.log(err);
     });
@@ -464,17 +483,7 @@ scrap.addEventListener('click', () => {
   scrapBox.style.display = 'block'
   add.style.backgroundColor = '#002a44'
   scrap.style.backgroundColor = '#2f2b9a'
-  axios.get('http://127.0.0.1:8000/equipmentManage/equipList')
-    .then((result) => {
-      for (const item of result.data) {
-        const option = document.createElement('option')
-        option.value = item.eId
-        option.innerHTML = item.eId + ' ' + item.eType
-        chooseScrap.appendChild(option)
-      }
-    }).catch((err) => {
-      console.log(err);
-    });
+  refreshOptions(chooseScrap, null, 'http://127.0.0.1:8000/equipmentManage/equipList', 'get', true)
 })
 
 //报废设备
@@ -484,16 +493,17 @@ scrapSubmit.addEventListener('click', () => {
     alert('请选择要报废的设备！')
   } else {
     axios.post('http://127.0.0.1:8000/equipmentManage/scrap', {
-    eId: scrapId
-  })
-    .then((result) => {
-      if (!result.data.status) {
-        alert('编号为【' + scrapId + '】的设备已成功标记报废！')
-      } else {
-        alert('操作失败!')
-      }
-    }).catch((err) => {
-      console.log(err);
-    });
+      eId: scrapId
+    })
+      .then((result) => {
+        if (!result.data.status) {
+          alert('编号为【' + scrapId + '】的设备已成功标记报废！')
+          refreshOptions(chooseScrap, null, 'http://127.0.0.1:8000/equipmentManage/equipList', 'get', true)
+        } else {
+          alert('操作失败!')
+        }
+      }).catch((err) => {
+        console.log(err);
+      });
   }
 })

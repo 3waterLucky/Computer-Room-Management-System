@@ -1,3 +1,4 @@
+//上机相关接口
 const express = require('express')
 const mysql = require('mysql2')
 const useComputer = express.Router()
@@ -15,7 +16,9 @@ useComputer.use(bodyParser.json())
 useComputer.use(express.urlencoded({ extended: false }))
 useComputer.use(cors())
 
-//开始上机
+// 开始上机
+// 请求参数：userId, startTime
+// 返回参数：eId
 useComputer.post('/start', (req, res) => {
   //先查找可用台式机
   db.promise().query(`SELECT eId FROM equipments WHERE eStatus=1 AND eType='台式机'`)
@@ -52,7 +55,9 @@ useComputer.post('/start', (req, res) => {
     });
   })
 
-//结束上机
+// 结束上机
+// 请求参数：userId, endTime
+// 返回参数：h, m, s, cost
 useComputer.post('/end', (req, res) => {
   const info = req.body
   //先拿到对应记录的上机开始时间，并计算价格

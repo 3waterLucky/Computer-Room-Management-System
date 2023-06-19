@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="./frontend/css/common.css">
-  <link rel="stylesheet" href="./frontend/css/home.css">
+  <link rel="stylesheet" href="./frontend/css/index.css">
   <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
   <title>访客页-计算机机房管理系统</title>
 </head>
@@ -84,6 +84,7 @@
           <div class="currentCost">
             <span class="title">当前已消费：</span>
             <span class="cost"></span>
+            <span class="yuan">元</span>
           </div>
           <div class="settle">
             结算
@@ -111,9 +112,14 @@
       </div>
       <!-- 用户管理 -->
       <div class="userManage">
-        <div class="addUser">添加用户</div>
+        <ul class="userNav">
+          <li class="addUser">添加用户</li>
+          <li class="setAdmin">设置管理员</li>
+          <li class="deleteUser">删除用户</li>
+        </ul>
+        <!-- <div class="addUser">添加用户</div>
         <div class="setAdmin">设置管理员</div>
-        <div class="deleteUser">删除用户</div>
+        <div class="deleteUser">删除用户</div> -->
         <div class="addUserBox">
           <form action="http://127.0.0.1:8000/userInfo/update" name="addUserInfo" id="addUserInfo">
             <ul>
@@ -139,7 +145,7 @@
               </li>
               <li>
                 <span class="pswTitle">密码:</span>
-                <input type="password" name="password" class="psw" maxlength="20" placeholder="若留空,则使用默认密码123456">
+                <input type="password" name="password" class="psw" maxlength="20" placeholder="留空则默认123456">
               </li>
               <li>
                 <input type="checkbox" name="auth" id="setAuth">

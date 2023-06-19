@@ -1,3 +1,4 @@
+//用户注册接口
 const express = require('express')
 const mysql = require('mysql2')
 const register = express.Router()
@@ -16,6 +17,8 @@ register.use(bodyParser.json())
 register.use(express.urlencoded({ extended: false }))
 register.use(cors())
 
+// 请求参数：userId, username, dep, password
+// 返回参数：userId, username
 register.post('/register', (req, res) => {
   const formObj = req.body
   console.log(formObj);

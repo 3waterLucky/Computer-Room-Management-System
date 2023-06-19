@@ -1,3 +1,4 @@
+//登录相关接口
 const express = require('express')
 const mysql = require('mysql2')
 const login = express.Router()
@@ -15,6 +16,8 @@ login.use(bodyParser.json())
 login.use(express.urlencoded({ extended: false }))
 login.use(cors())
 
+// 请求参数：userId, password
+// 返回参数：username, userId
 login.post('/login', (req, res) => {
   console.log(req.body);
   db.promise().query(`SELECT * FROM users WHERE userId=${Number(req.body.userId)}`)
