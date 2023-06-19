@@ -409,6 +409,14 @@ header .mask {
   cursor: pointer;
 }
 
+.userManage .userNav li:first-child {
+  border-top-right-radius: 10px;
+}
+
+.userManage .userNav li:last-child {
+  border-bottom-right-radius: 10px;
+}
+
 .userManage .addUserBox .save,
 .userManage .setAdminBox .setAdminSubmit,
 .userManage .deleteUserBox .deleteSubmit {
@@ -488,10 +496,13 @@ header .mask {
 
 .statistics table {
   margin: 20px auto 0 auto;
+  border-collapse: collapse;
+  border: 2px solid #000;
 }
 
 .statistics table td,
 .statistics table th {
+  padding: 1px 8px;
   text-align: center;
   border: 1px solid #000;
 }

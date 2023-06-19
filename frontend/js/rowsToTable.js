@@ -46,9 +46,11 @@ export function rowsToTable(rows) {
         td.innerHTML = dateToStr(new Date(rows[i - 1][key]))
         if (!rows[i - 1][key] && key === 'endTime') {
           td.innerHTML = '未结束'
+          table.children[i].style.backgroundColor = 'yellow'
         }
         if (!rows[i - 1][key] && key === 'returnTime') {
           td.innerHTML = '未归还'
+          table.children[i].style.backgroundColor = 'yellow'
         }
       } else {
         td.innerHTML = rows[i - 1][key]
