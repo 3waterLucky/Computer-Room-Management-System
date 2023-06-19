@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./frontend/css/common.css">
+  <link rel="stylesheet" href="./frontend/css/home.css">
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+  <title>访客页-计算机机房管理系统</title>
+</head>
+<body>
+  <header>
+    <div class="mask">
+      <h1>计算机机房管理系统</h1>
+      <div class="user">
+        欢迎您，用户名
+        <a class="quit" href="./login.html">退出</a>
+      </div>
+    </div>
+  </header>
+  <!-- 版心 -->
+  <div class="w clearfix">
+    <!-- 左侧导航栏 -->
+    <div class="nav">
+      <ul>
+        <li>个人信息</li>
+        <li>上机登记</li>
+        <li>设备领用</li>
+        <li class="authorizedNav">用户管理</li>
+        <li class="authorizedNav">设备管理</li>
+        <li class="authorizedNav">信息统计</li>
+      </ul>
+    </div>
+    <!-- 右侧内容区域 -->
+    <div class="content">
+      <!-- 个人信息 -->
+      <div class="userInfo">
+        <form action="http://127.0.0.1:8000/userInfo/update" name="updateUserInfo" id="updateUserInfo">
+          <ul>
+            <li>
+              <span class="userIdTitle">学号/工号:</span>
+              <span class="userId"></span>
+            </li>
+            <li>
+              <span class="usernameTitle">姓名:</span>
+              <input type="text" name="username" class="username">
+            </li>
+            <li>
+              <span class="depTitle">部门:</span>
+              <select name="dep" class="dep">
+                <option value="cs">计算机科学与技术系</option>
+                <option value="ce">通信工程系</option>
+                <option value="se">软件工程系</option>
+                <option value="iot">物联网工程系</option>
+                <option value="ai">智能科学与技术系</option>
+                <option value="others">其他</option>
+              </select>
+            </li>
+            <li>
+              <span class="pswTitle">新密码:</span>
+              <input type="password" name="password" class="psw" maxlength="20" placeholder="若留空,则不修改密码">
+            </li>
+          </ul>
+        </form>
+        <div class="save">保&nbsp;存</div>
+      </div>
+      <!-- 上机登记 -->
+      <div class="oppc">
+        上机登记
+      </div>
+      <!-- 设备领用 -->
+      <div class="borrow">
+        <div class="get">我要借用</div>
+        <div class="return">我要归还</div>
+        <div class="getBox">
+          <span>请选择要借用的设备:</span>
+          <select name="chooseEquip" class="chooseEquip">
+            <option value="" disabled selected hidden>--请选择设备--</option>
+          </select>
+          <div class="getSubmit">确认领用</div>
+        </div>
+        <div class="returnBox">
+          <span>请选择要归还的设备:</span>
+          <select name="returnEquip" class="returnEquip">
+            <option value="" disabled selected hidden>--请选择设备--</option>
+          </select>
+          <div class="returnSubmit">确认归还</div>
+        </div>
+      </div>
+      <!-- 用户管理 -->
+      <div class="userManage">
+        <div class="addUser">添加用户</div>
+        <div class="setAdmin">设置管理员</div>
+        <div class="deleteUser">删除用户</div>
+        <div class="addUserBox">
+          <form action="http://127.0.0.1:8000/userInfo/update" name="addUserInfo" id="addUserInfo">
+            <ul>
+              <li>
+                <span class="userIdTitle">学号/工号:</span>
+                <input type="number" name="userId" class="userId" minlength="10" maxlength="10">
+              </li>
+              <li>
+                <span class="usernameTitle">姓名:</span>
+                <input type="text" name="username" class="username">
+              </li>
+              <li>
+                <span class="depTitle">部门:</span>
+                <select name="dep" class="dep">
+                  <option value="" disabled selected hidden>--请选择所在部门--</option>
+                  <option value="cs">计算机科学与技术系</option>
+                  <option value="ce">通信工程系</option>
+                  <option value="se">软件工程系</option>
+                  <option value="iot">物联网工程系</option>
+                  <option value="ai">智能科学与技术系</option>
+                  <option value="others">其他</option>
+                </select>
+              </li>
+              <li>
+                <span class="pswTitle">密码:</span>
+                <input type="password" name="password" class="psw" maxlength="20" placeholder="若留空,则使用默认密码123456">
+              </li>
+              <li>
+                <input type="checkbox" name="auth" id="setAuth">
+                <label for="setAuth">设为管理员</label>
+              </li>
+            </ul>
+          </form>
+          <div class="save">保&nbsp;存</div>
+        </div>
+        <div class="setAdminBox">
+          <div class="searchUser">
+            <span>学号/工号：</span>
+            <input type="number" name="userId" class="searchId">
+          </div>
+          <div class="searchResult">
+            <span>姓名：</span>
+            <span class="searchResultName"></span>
+          </div>
+          <div class="setAdminSubmit">
+            设为管理员
+          </div>
+        </div>
+        <div class="deleteUserBox">
+          <div class="searchUser">
+            <span>学号/工号：</span>
+            <input type="number" name="userId" class="searchId">
+          </div>
+          <div class="searchResult">
+            <span>姓名：</span>
+            <span class="searchResultName"></span>
+          </div>
+          <div class="deleteSubmit">
+            删除用户
+          </div>
+        </div>
+      </div>
+      <!-- 设备管理 -->
+      <div class="equipmentManage">
+        <div class="add">添加设备</div>
+        <div class="scrap">报废设备</div>
+        <div class="addBox">
+          <span>请选择输入设备类型:</span>
+          <input type="text" class="addEquipType">
+          <div class="addSubmit">
+            确定添加
+          </div>
+        </div>
+        <div class="scrapBox">
+          <span>请选择要报废的设备:</span>
+          <select name="chooseScrap" class="chooseScrap">
+            <option value="" disabled selected hidden>--请选择设备--</option>
+          </select>
+          <div class="scrapSubmit">
+            确定报废
+          </div>
+        </div>
+      </div>
+      <!-- 信息统计 -->
+      <div class="statistics">
+        信息统计
+      </div>
+    </div>
+  </div>
+  <script type="module" src="./frontend/js/index.js"></script>
+</body>
+</html>

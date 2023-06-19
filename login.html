@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./frontend/css/common.css">
+  <link rel="stylesheet" href="./frontend/css/login.css">
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+  <title>登录页-计算机机房管理系统</title>
+</head>
+<body>
+  <div class="login">
+    <div class="left">
+      <div class="text">
+        <h1>WELCOME</h1>
+        <h1>计算机机房管理系统</h1>
+      </div>
+    </div>
+    <div class="right">
+      <!-- 登录框 -->
+      <div class="info">
+        <form action="http://127.0.0.1:8000/api/login" method="post" id="loginForm" name="loginForm">
+          <ul>
+            <li class="userIdBox">
+              <input type="number" id="loginUserId" name="userId" placeholder="请输入您的学号/工号">
+            </li>
+            <li class="pswBox">
+              <input type="password" id="loginPsw" name="password" placeholder="请输入密码">
+            </li>
+          </ul>
+        </form>
+        <div class="submit" id="loginButton">
+          登&nbsp;&nbsp;录
+        </div>
+      </div>
+      <!-- 注册框 -->
+      <h2 class="regTitle">欢迎注册</h2>
+      <div class="register">
+        <form action="http://127.0.0.1:8000/api/register" method="post" id="registerFrom" name="registerFrom">
+          <ul>
+            <li class="userIdBox">
+              <input type="number" id="userId" name="userId" placeholder="请输入您的十位数学号/工号">
+            </li>
+            <li class="usernameBox">
+              <input type="text" name="username" id="username" placeholder="请输入您的姓名">
+            </li>
+            <li class="depBox">
+              <select name="dep" id="dep">
+                <option value="" disabled selected hidden>--请选择所在部门--</option>
+                <option value="cs">计算机科学与技术系</option>
+                <option value="ce">通信工程系</option>
+                <option value="se">软件工程系</option>
+                <option value="iot">物联网工程系</option>
+                <option value="ai">智能科学与技术系</option>
+                <option value="others">其他</option>
+              </select>
+            </li>
+            <li class="pswBox">
+              <input type="password" id="psw" name="password" placeholder="请输入20位以内的密码" maxlength="20">
+            </li>
+          </ul>
+        </form>
+        <div class="submit" id="registerButton">
+          注册并登录
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="./frontend/js/login.js"></script>
+</body>
+</html>

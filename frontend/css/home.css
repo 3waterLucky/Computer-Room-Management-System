@@ -1,0 +1,325 @@
+/* html {
+  height: 100%;
+} */
+
+body {
+  background-color: #efefef;
+}
+
+/* header部分 */
+header {
+  width: 100%;
+  height: 100px;
+  background: url(../images/bluebgi.jpg) no-repeat;
+  background-position: 60% 80%;
+  background-size: cover;
+  line-height: 100px;
+}
+
+header .mask {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+/* 标题 */
+.mask h1 {
+  position: relative;
+  float: left;
+  height: 100%;
+  width: 100%;
+  padding-left: 150px;
+  font-size: 40px;
+  color: transparent;
+  -webkit-text-stroke: 1px #fff;
+  background: url(../images/bluebgi.jpg) no-repeat;
+  background-position: 60% 80%;
+  background-size: cover;
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+.mask h1::before {
+  position: absolute;
+  left: 80px;
+  content: '\e956';
+  font-family: 'icomoon';
+  font-size: 3vw;
+}
+
+/* 用户 */
+.mask .user {
+  position: absolute;
+  top: 32px;
+  right: 40px;
+  color: #fff;
+}
+
+.mask .user .quit {
+  margin-left: 20px;
+}
+
+/* 版心 */
+.w {
+  width: 1200px;
+  margin: 0 auto;
+  background-color: #fff;
+}
+
+.w .nav {
+  float: left;
+  width: 270px;
+  height: 100%;
+  color: #888;
+  background-color: #002a44;
+}
+
+.w .nav ul li {
+  position: relative;
+  width: 100%;
+  height: 60px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 550;
+  line-height: 60px;
+  border: 1px solid #fff;
+  cursor: pointer;
+}
+
+.w .nav ul li:first-child {
+  border-top: none;
+  background-color: #2f2b9a;
+  color: #fff;
+}
+
+.w .nav ul li::after {
+  position: absolute;
+  right: 10px;
+  content: '\e910';
+  font-family: 'icomoon';
+  font-size: 18px;
+}
+
+/* 仅管理员可见的导航栏默认隐藏 */
+.authorizedNav {
+  display: none;
+}
+
+/* 右侧信息模块 */
+.content {
+  position: relative;
+  width: 930px;
+  float: left;
+}
+
+/* 除个人信息板块外,默认隐藏 */
+.oppc,
+.borrow,
+.userManage,
+.equipmentManage,
+.statistics {
+  display: none;
+}
+
+.userInfo,
+.oppc,
+.borrow,
+.userManage,
+.equipmentManage,
+.statistics {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+/* 个人信息页 */
+.userInfo #updateUserInfo {
+  margin: 0 auto;
+  width: 300px;
+  height: 200px;
+}
+
+.userInfo #updateUserInfo ul li {
+  width: 100%;
+  height: 30px;
+  margin-top: 20px;
+  line-height: 30px;
+}
+
+.userInfo #updateUserInfo ul li span:nth-child(2) {
+  margin-left: 20px;
+}
+
+.userInfo #updateUserInfo ul li input {
+  float: right;
+  width: 200px;
+  height: 30px;
+  line-height: 30px;
+}
+
+.userInfo #updateUserInfo ul li select {
+  float: right;
+  width: 200px;
+  height: 30px;
+  line-height: 30px;
+}
+
+.userInfo .save {
+  width: 80px;
+  height: 40px;
+  margin: 30px auto 0 auto;
+  line-height: 40px;
+  text-align: center;
+  color: #fff;
+  background-color: #2f2b9a;
+  border-radius: 30px;
+}
+
+/* 设备领用页 */
+.borrow .getBox,
+.borrow .returnBox {
+  display: none;
+  width: 100%;
+  height: 100%;
+}
+
+.borrow .get,
+.borrow .return {
+  position: absolute;
+  width: 120px;
+  height: 40px;
+  top: 15px;
+  color: #fff;
+  text-align: center;
+  line-height: 40px;
+  background-color: #002a44;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.borrow .get {
+  left: 330px;
+}
+
+.borrow .return {
+  right: 330px;
+}
+
+.borrow .getBox,
+.borrow .returnBox {
+  position: absolute;
+  width: 600px;
+  height: 100px;
+  top: 100px;
+  margin-left: 165px;
+  text-align: center;
+}
+
+.borrow .getBox span,
+.borrow .returnBox span {
+  display: inline-block;
+  height: 30px;
+  line-height: 30px;
+}
+
+.borrow .getBox select,
+.borrow .returnBox select {
+  width: 120px;
+  height: 30px;
+  margin-left: 20px;
+}
+
+.borrow .getBox .getSubmit,
+.borrow .returnBox .returnSubmit {
+  width: 120px;
+  height: 40px;
+  margin: 30px auto 0 auto;
+  line-height: 40px;
+  text-align: center;
+  color: #fff;
+  background-color: #2f2b9a;
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+/* 设备管理页 */
+.equipmentManage .addBox,
+.equipmentManage .scrapBox {
+  display: none;
+  width: 100%;
+  height: 100%;
+}
+
+.equipmentManage .add,
+.equipmentManage .scrap {
+  position: absolute;
+  width: 120px;
+  height: 40px;
+  top: 15px;
+  color: #fff;
+  text-align: center;
+  line-height: 40px;
+  background-color: #002a44;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.equipmentManage .add {
+  left: 330px;
+}
+
+.equipmentManage .scrap {
+  right: 330px;
+}
+
+.equipmentManage input {
+  margin-left: 10px;
+  width: 150px;
+  height: 30px;
+  line-height: 30px;
+}
+
+.equipmentManage .addBox,
+.equipmentManage .scrapBox {
+  position: absolute;
+  width: 600px;
+  height: 100px;
+  top: 100px;
+  margin-left: 165px;
+  text-align: center;
+}
+
+.equipmentManage .addBox span,
+.equipmentManage .scrapBox span {
+  display: inline-block;
+  height: 30px;
+  line-height: 30px;
+}
+
+.equipmentManage .addBox select,
+.equipmentManage .scrapBox select {
+  width: 120px;
+  height: 30px;
+  margin-left: 20px;
+}
+
+.equipmentManage .addBox .addSubmit,
+.equipmentManage .scrapBox .scrapSubmit {
+  width: 120px;
+  height: 40px;
+  margin: 30px auto 0 auto;
+  line-height: 40px;
+  text-align: center;
+  color: #fff;
+  background-color: #2f2b9a;
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+/* 用户管理页 */
+.addUserBox,
+.setAdminBox,
+.deleteUserBox {
+  display: none;
+}
