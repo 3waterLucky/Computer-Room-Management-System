@@ -13,7 +13,7 @@ const db = mysql.createConnection({
 })
 
 register.use(bodyParser.json())
-register.use(express.urlencoded())
+register.use(express.urlencoded({ extended: false }))
 register.use(cors())
 
 register.post('/register', (req, res) => {

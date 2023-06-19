@@ -110,6 +110,59 @@ saveUserInfo.addEventListener('click', () => {
 /*
 ******************
 *                *
+*   上机登记页    *
+*                *
+******************
+*/
+const oppc = document.querySelector('.oppc')
+const start = oppc.querySelector('.start')
+const using = oppc.querySelector('.using')
+const startTimeBox = using.querySelector('.startTime')
+const startTimeTitle = startTimeBox.querySelector('.title')
+const time = startTimeBox.querySelector('.time')
+const duration = using.querySelector('.duration')
+const durationTitle = duration.querySelector('.title')
+const hour = duration.querySelector('.hour')
+const hourTitle = duration.querySelector('.hourTitle')
+const min = duration.querySelector('.min')
+const minTitle = duration.querySelector('.minTitle')
+const sec = duration.querySelector('.sec')
+const secTitle = duration.querySelector('.secTitle')
+const currentCost = using.querySelector('.currentCost')
+const costTitle = currentCost.querySelector('.title')
+const cost = currentCost.querySelector('.cost')
+const settle = using.querySelector('.settle')
+
+//开始上机
+start.addEventListener('click', () => {
+  const curTime = new Date()
+  axios.post('http://127.0.0.1:8000/op/start', {
+    userId: urlParams.id,
+    startTime: curTime
+  })
+    .then((result) => {
+      if (!result.data.status) {
+        alert(`登记成功！请使用编号为【${result.data.eId}】的台式机。`)
+      } else {
+        alert(result.data.message)
+      }
+    }).catch((err) => {
+      console.log(err);
+    });
+})
+
+//结束上机并结算
+settle.addEventListener('click', () => {
+  const curTime = new Date()
+  axios.post('http://127.0.0.1:8000/op/end', {
+    userId: urlParams.id,
+    endTime: curTime
+  })
+})
+
+/*
+******************
+*                *
 *   设备领用页    *
 *                *
 ******************
@@ -130,6 +183,9 @@ getButton.addEventListener('click', () => {
   returnButton.style.backgroundColor = '#002a44'
   getBox.style.display = 'block'
   returnBox.style.display = 'none'
+  while (getEquipList.children.length) {
+    getEquipList.removeChild(getEquipList.children[getEquipList.children.length - 1])
+  }
   axios.get('http://127.0.0.1:8000/equipmentManage/equipList/distinct')
     .then((result) => {
       for (const item of result.data) {
@@ -221,6 +277,133 @@ returnSubmit.addEventListener('click', () => {
 /*
 ******************
 *                *
+*   用户管理页    *
+*                *
+******************
+*/
+const addUser = document.querySelector('.addUser')
+const setAdmin = document.querySelector('.setAdmin')
+const deleteUser = document.querySelector('.deleteUser')
+const addUserBox = document.querySelector('.addUserBox')
+const setAdminBox = document.querySelector('.setAdminBox')
+const deleteUserBox = document.querySelector('.deleteUserBox')
+const saveButton = addUserBox.querySelector('.save')
+const setAdminSearchUser = setAdminBox.querySelector('.searchUser')
+const setAdminsearchResult = setAdminBox.querySelector('.searchResult')
+const setAdminSubmit = setAdminBox.querySelector('.setAdminSubmit')
+const deleteSearchUser = deleteUserBox.querySelector('.searchUser')
+const deleteSearchResult = deleteUserBox.querySelector('.searchResult')
+const deleteSubmit = deleteUserBox.querySelector('.deleteSubmit')
+
+//添加用户
+addUser.addEventListener('click', () => {
+  addUserBox.style.display = 'block'
+  setAdminBox.style.display = 'none'
+  deleteUserBox.style.display = 'none'
+})
+
+saveButton.addEventListener('click', () => {
+  const addUserInfo = document.getElementById('addUserInfo')
+  const form = formdataToJson(new FormData(addUserInfo))
+  axios.post('http://127.0.0.1:8000/userInfo/add', form)
+    .then((result) => {
+      if (!result.data.status) {
+        alert(`成功添加用户【${result.data.userId}  ${result.data.username}】！`)
+      } else {
+        alert('添加用户失败！')
+      }
+    }).catch((err) => {
+      console.log(err);
+    });
+})
+
+//设置管理员
+const searchResultName = setAdminBox.querySelector('.searchResultName')
+const searchId = setAdminBox.querySelector('.searchId')
+setAdmin.addEventListener('click', () => {
+  addUserBox.style.display = 'none'
+  setAdminBox.style.display = 'block'
+  deleteUserBox.style.display = 'none'
+})
+//根据学号/工号获取姓名进行显示
+searchId.addEventListener('blur', () => {
+  axios.get('http://127.0.0.1:8000/userInfo/username', {
+    params: {
+      userId: searchId.value
+    }
+  })
+    .then((result) => {
+      if (!result.data.status) {
+        searchResultName.innerHTML = result.data.username
+      }
+    }).catch((err) => {
+      console.log(err);
+    });
+})
+//提交设置为管理员
+setAdminSubmit.addEventListener('click', () => {
+  const userObj = {}
+  userObj.userId = setAdminBox.querySelector('.searchId').value
+  let confirmSubmit = confirm(`您确定要将【${userObj.userId}  ${searchResultName.innerHTML}】设置为管理员吗？`)
+  if (confirmSubmit) {
+    axios.post('http://127.0.0.1:8000/userInfo/setAdmin', userObj)
+    .then((result) => {
+      if (!result.data.status) {
+        alert(`已成功将【${userObj.userId}  ${searchResultName.innerHTML}】设置为管理员！`)
+      } else {
+        alert('设置管理员失败！')
+      }
+    }).catch((err) => {
+      console.log(err);
+    });
+  }
+})
+
+//删除用户
+const deleteSearchResultName = deleteUserBox.querySelector('.searchResultName')
+const deleteSearchId = deleteUserBox.querySelector('.searchId')
+deleteUser.addEventListener('click', () => {
+  addUserBox.style.display = 'none'
+  setAdminBox.style.display = 'none'
+  deleteUserBox.style.display = 'block'
+})
+//根据学号/工号获取姓名进行显示
+deleteSearchId.addEventListener('blur', () => {
+  axios.get('http://127.0.0.1:8000/userInfo/username', {
+    params: {
+      userId: deleteSearchId.value
+    }
+  })
+    .then((result) => {
+      if (!result.data.status) {
+        deleteSearchResultName.innerHTML = result.data.username
+      }
+    }).catch((err) => {
+      console.log(err);
+    });
+})
+//提交设置为管理员
+deleteSubmit.addEventListener('click', () => {
+  const userObj = {}
+  userObj.userId = deleteUserBox.querySelector('.searchId').value
+  let confirmSubmit = confirm(`您确定要将用户【${userObj.userId}  ${deleteSearchResultName.innerHTML}】删除吗？`)
+  if (confirmSubmit) {
+    axios.post('http://127.0.0.1:8000/userInfo/deleteUser', userObj)
+    .then((result) => {
+      if (!result.data.status) {
+        alert(`已成功将用户【${result.data.userId}  ${deleteSearchResultName.innerHTML}】删除！`)
+      } else {
+        alert('删除用户失败！')
+      }
+    }).catch((err) => {
+      console.log(err);
+    });
+  }
+})
+
+/*
+******************
+*                *
 *   设备管理页    *
 *                *
 ******************
@@ -299,127 +482,4 @@ scrapSubmit.addEventListener('click', () => {
       console.log(err);
     });
   }
-})
-
-/*
-******************
-*                *
-*   用户管理页    *
-*                *
-******************
-*/
-const addUser = document.querySelector('.addUser')
-const setAdmin = document.querySelector('.setAdmin')
-const deleteUser = document.querySelector('.deleteUser')
-const addUserBox = document.querySelector('.addUserBox')
-const setAdminBox = document.querySelector('.setAdminBox')
-const deleteUserBox = document.querySelector('.deleteUserBox')
-const saveButton = addUserBox.querySelector('.save')
-const setAdminSearchUser = setAdminBox.querySelector('.searchUser')
-const setAdminsearchResult = setAdminBox.querySelector('.searchResult')
-const setAdminSubmit = setAdminBox.querySelector('.setAdminSubmit')
-const deleteSearchUser = deleteUserBox.querySelector('.searchUser')
-const deleteSearchResult = deleteUserBox.querySelector('.searchResult')
-const deleteSubmit = deleteUserBox.querySelector('.deleteSubmit')
-
-//添加用户
-addUser.addEventListener('click', () => {
-  addUserBox.style.display = 'block'
-  setAdminBox.style.display = 'none'
-  deleteUserBox.style.display = 'none'
-})
-
-saveButton.addEventListener('click', () => {
-  const addUserInfo = document.getElementById('addUserInfo')
-  const form = formdataToJson(new FormData(addUserInfo))
-  axios.post('http://127.0.0.1:8000/userInfo/add', form)
-    .then((result) => {
-      if (!result.data.status) {
-        alert(`成功添加用户【${result.data.userId}  ${result.data.username}】！`)
-      } else {
-        alert('添加用户失败！')
-      }
-    }).catch((err) => {
-      console.log(err);
-    });
-})
-
-//设置管理员
-const searchResultName = setAdminBox.querySelector('.searchResultName')
-const searchId = setAdminBox.querySelector('.searchId')
-setAdmin.addEventListener('click', () => {
-  addUserBox.style.display = 'none'
-  setAdminBox.style.display = 'block'
-  deleteUserBox.style.display = 'none'
-})
-//根据学号/工号获取姓名进行显示
-searchId.addEventListener('blur', () => {
-  axios.get('http://127.0.0.1:8000/userInfo/username', {
-    params: {
-      userId: searchId.value
-    }
-  })
-    .then((result) => {
-      if (!result.data.status) {
-        searchResultName.innerHTML = result.data.username
-      }
-    }).catch((err) => {
-      console.log(err);
-    });
-})
-//提交设置为管理员
-setAdminSubmit.addEventListener('click', () => {
-  const userObj = {}
-  userObj.userId = setAdminBox.querySelector('.searchId').value
-  
-  axios.post('http://127.0.0.1:8000/userInfo/setAdmin', userObj)
-    .then((result) => {
-      if (!result.data.status) {
-        alert(`已成功将【${userObj.userId}  ${searchResultName.innerHTML}】设置为管理员！`)
-      } else {
-        alert('设置管理员失败！')
-      }
-    }).catch((err) => {
-      console.log(err);
-    });
-})
-
-//删除用户
-const deleteSearchResultName = deleteUserBox.querySelector('.searchResultName')
-const deleteSearchId = deleteUserBox.querySelector('.searchId')
-deleteUser.addEventListener('click', () => {
-  addUserBox.style.display = 'none'
-  setAdminBox.style.display = 'none'
-  deleteUserBox.style.display = 'block'
-})
-//根据学号/工号获取姓名进行显示
-deleteSearchId.addEventListener('blur', () => {
-  axios.get('http://127.0.0.1:8000/userInfo/username', {
-    params: {
-      userId: deleteSearchId.value
-    }
-  })
-    .then((result) => {
-      if (!result.data.status) {
-        deleteSearchResultName.innerHTML = result.data.username
-      }
-    }).catch((err) => {
-      console.log(err);
-    });
-})
-//提交设置为管理员
-deleteSubmit.addEventListener('click', () => {
-  const userObj = {}
-  userObj.userId = deleteUserBox.querySelector('.searchId').value
-  
-  axios.post('http://127.0.0.1:8000/userInfo/deleteUser', userObj)
-    .then((result) => {
-      if (!result.data.status) {
-        alert(`已成功将用户【${result.data.userId}  ${deleteSearchResultName.innerHTML}】删除！`)
-      } else {
-        alert('删除用户失败！')
-      }
-    }).catch((err) => {
-      console.log(err);
-    });
 })

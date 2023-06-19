@@ -9,9 +9,10 @@ CREATE TABLE users(
 CREATE TABLE equipments(
 	eId INT PRIMARY KEY NOT NULL UNIQUE AUTO_INCREMENT,
     eType VARCHAR(10) NOT NULL,
-    eStatus INT CHECK (eStatus >= 0 AND eStatus <= 2) NOT NULL,
+    eStatus INT CHECK (eStatus >= 0 AND eStatus <= 3) NOT NULL,
     occupiedId BIGINT REFERENCES users(userId)
 );
+
 
 CREATE TABLE opPC(
 	userId BIGINT REFERENCES users(userId),
@@ -21,7 +22,7 @@ CREATE TABLE opPC(
     cost INT
 );
 
--- 关闭安全更新模式
+-- 关闭安全更新模式，否则无法根据occupiedId更改设备状态
 SET sql_safe_updates=0;
 
 -- 定义触发器
@@ -36,4 +37,11 @@ FOR EACH ROW
 CREATE TRIGGER useComputer
 AFTER INSERT ON opPC
 FOR EACH ROW
-	UPDATE equipments SET eStatus=0, occupiedId=NEW.userId WHERE eId=NEW.eId;
+	UPDATE equipments SET eStatus=3, occupiedId=NEW.userId WHERE eId=NEW.eId;
+    
+-- 定义触发器
+-- 当有人上机结束时，将对应机器标志为空闲
+CREATE TRIGGER releaseCompuer
+AFTER UPDATE ON opPC
+FOR EACH ROW
+	UPDATE equipments SET eStatus=1, occupiedId=NULL WHERE eId=OLD.eId;

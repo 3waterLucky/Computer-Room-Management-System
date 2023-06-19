@@ -12,7 +12,7 @@ const db = mysql.createConnection({
 })
 
 equipmentManage.use(bodyParser.json())
-equipmentManage.use(express.urlencoded())
+equipmentManage.use(express.urlencoded({ extended: false }))
 equipmentManage.use(cors())
 
 //获取已有设备类型列表(不重复)

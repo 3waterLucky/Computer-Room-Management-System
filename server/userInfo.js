@@ -12,7 +12,7 @@ const db = mysql.createConnection({
 })
 
 userInfo.use(bodyParser.json())
-userInfo.use(express.urlencoded())
+userInfo.use(express.urlencoded({ extended: false }))
 userInfo.use(cors())
 
 //获取用户姓名

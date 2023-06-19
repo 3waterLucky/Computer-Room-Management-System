@@ -12,7 +12,7 @@ const db = mysql.createConnection({
 })
 
 login.use(bodyParser.json())
-login.use(express.urlencoded())
+login.use(express.urlencoded({ extended: false }))
 login.use(cors())
 
 login.post('/login', (req, res) => {
