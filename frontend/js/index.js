@@ -108,7 +108,9 @@ saveUserInfo.addEventListener('click', () => {
   } else {
     axios.post('http://127.0.0.1:8000/userInfo/update', form)
       .then((result) => {
-        console.log(result);
+        if(!result.data.status) {
+          alert('修改个人信息成功！')
+        }
       }).catch((err) => {
         console.log(err);
       });

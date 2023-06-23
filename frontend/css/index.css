@@ -175,6 +175,7 @@ header .mask {
   color: #fff;
   background-color: #2f2b9a;
   border-radius: 30px;
+  cursor: pointer;
 }
 
 /* 上机登记页 */
